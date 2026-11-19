@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-parent -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.1.2</version>
+        <relativePath></relativePath>
+    </parent>
+
+    <groupId>org.example</groupId>
+    <artifactId>neptun-pp</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <!-- külső Tomcatre deployolható webalkalmazás (java -jar-ral is indítható) -->
+    <packaging>war</packaging>
+
+    <properties>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- a WAR neve = a context path (application.yml: server.servlet.context-path) -->
+        <context-name>neptun-pp</context-name>
+        <!-- buildNg: a szomszédos Angular projekt -->
+        <frontend.dir>${project.basedir}/../${project.artifactId}-ng</frontend.dir>
+        <static.dir>${project.basedir}/src/main/resources/static</static.dir>
+    </properties>
+
+    <dependencies>
+        <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
+        </dependency>
+        <!-- WAR: a Tomcatet a külső szerver adja, ne kerüljön a WEB-INF/lib-be
+             (java -jar-hoz a repackage a WEB-INF/lib-provided-be teszi) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <!-- Spring Boot 4: a H2 webkonzol (/db) külön modulba került -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-h2console</artifactId>
+        </dependency>
+        <!-- Hibernate Validator: @NotBlank, @Size, @NotNull, @Valid -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.20.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/com.h2database/h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
+            <!-- egy régi (android) snakeyaml-t hozna, ami a WAR-ban ütközik a Spring Boot 2.x-es
+                 snakeyaml-jével (NoSuchMethodError: LoaderOptions.setMaxAliasesForCollections) -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.yaml</groupId>
+                    <artifactId>snakeyaml</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- neptun-pp.war (verziószám nélkül) → a Tomcaton /neptun-pp lesz a context path -->
+        <finalName>${context-name}</finalName>
+        <plugins>
+            <!-- JDK 23+: a javac magától nem futtatja az annotációfeldolgozókat, a Lombokot meg kell adni -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <!-- mvn spring-boot:run, valamint a futtatható WAR (repackage) -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!--
+            mvn package -PbuildNg: lebuildeli a szomszédos ../neptun-pp-ng Angular projektet
+            (a plugin által letöltött Node.js-szel), bemásolja a src/main/resources/static
+            mappába, és úgy készül el a WAR.
+            Profil nélkül (mvn package) csak a WAR készül, a static mappa aktuális tartalmával.
+        -->
+        <profile>
+            <id>buildNg</id>
+            <build>
+                <plugins>
+                    <!-- 1. a static mappa kiürítése (a fájlnevek hash-e minden buildnél más) -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>clean the static folder</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                                <configuration>
+                                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                                    <filesets>
+                                        <fileset>
+                                            <directory>${static.dir}</directory>
+                                        </fileset>
+                                    </filesets>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- 2. Node.js letöltése, npm install, ng build (production, /neptun-pp/ base href) -->
+                    <!-- https://mvnrepository.com/artifact/com.github.eirslett/frontend-maven-plugin -->
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>1.15.4</version>
+                        <configuration>
+                            <workingDirectory>${frontend.dir}</workingDirectory>
+                            <installDirectory>${project.build.directory}</installDirectory>
+                            <nodeVersion>v24.22.0</nodeVersion>
+                            <!-- a Node.js-hez tartozó npm -->
+                            <npmVersion>provided</npmVersion>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>install node and npm</id>
+                                <goals>
+                                    <goal>install-node-and-npm</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                            </execution>
+                            <execution>
+                                <id>npm install</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                                <configuration>
+                                    <arguments>install --no-audit --no-fund</arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>ng build</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                                <configuration>
+                                    <arguments>run build -- --configuration=production --base-href=/${context-name}/</arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- 3. a lebuildelt Angular alkalmazás bemásolása a static mappába -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy the Angular build to static</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${static.dir}</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${frontend.dir}/dist/${project.artifactId}-ng/browser</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

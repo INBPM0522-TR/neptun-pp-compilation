@@ -1,0 +1,44 @@
+<app-list-card title="Hallgatók"
+               entity="hallgató"
+               [items]="students | sort: orderBy : desc"
+               [error]="error"
+               [columns]="6">
+
+  <!-- ng-content: egyszeri tartalom a kártya fejlécébe -->
+  <!-- gombok: az ikon mindig látszik, a felirat csak md mérettől (d-none d-md-inline) -->
+  <a actions class="btn btn-sm btn-dark m-1" [routerLink]="'create'" title="Létrehozás">
+    <i class="bi bi-plus-lg"></i>
+    <span class="d-none d-md-inline ms-1">Létrehozás</span>
+  </a>
+
+  <ng-template #header>
+    <!-- v1: egyirányú kötés, a szülő order függvényét kapja -->
+    <th sortable-v1 value="neptun" [orderBy]="orderBy" [desc]="desc" [order]="order">Neptun-kód</th>
+    <th sortable-v1 value="name" [orderBy]="orderBy" [desc]="desc" [order]="order">Név</th>
+    <!-- v2: kétirányú kötés -->
+    <th sortable-v2 value="program" [(orderBy)]="orderBy" [(desc)]="desc">Szak</th>
+    <th sortable-v2 value="created" [(orderBy)]="orderBy" [(desc)]="desc">Létrehozva</th>
+    <th sortable-v2 value="updated" [(orderBy)]="orderBy" [(desc)]="desc">Módosítva</th>
+    <th>Műveletek</th>
+  </ng-template>
+
+  <ng-template #row let-student>
+    <td><code class="badge text-bg-dark">{{ student.neptun }}</code></td>
+    <td>{{ student.name }}</td>
+    <td>{{ student.program | program }}</td>
+    <td>{{ student.created | date: datetimeFormat }}</td>
+    <td>{{ student.updated | date: datetimeFormat }}</td>
+    <td>
+      <button class="btn btn-sm btn-outline-danger m-1" title="Törlés"
+              (click)="confirmDelete(student)">
+        <i class="bi bi-trash"></i>
+        <span class="d-none d-md-inline ms-1">Törlés</span>
+      </button>
+      <a class="btn btn-sm btn-outline-primary m-1" title="Módosítás"
+         [routerLink]="student.neptun">
+        <i class="bi bi-pencil"></i>
+        <span class="d-none d-md-inline ms-1">Módosítás</span>
+      </a>
+    </td>
+  </ng-template>
+</app-list-card>

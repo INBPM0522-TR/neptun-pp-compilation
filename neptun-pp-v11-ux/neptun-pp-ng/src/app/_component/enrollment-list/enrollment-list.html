@@ -1,0 +1,29 @@
+<!-- Ugyanaz a ListCard és ugyanaz a generikus (v3) rendezés, csak más típussal: Enrollment -->
+<app-list-card sortable-table [(sort)]="sort"
+               title="Tárgyfelvételek"
+               entity="tárgyfelvétel"
+               [items]="enrollments | sort: sort?.orderBy : sort?.desc"
+               [error]="error"
+               [columns]="4">
+
+  <ng-template #header>
+    <!-- a student és subject objektum, ezek szerint nem rendezünk -->
+    <th>Hallgató</th>
+    <th>Tárgy</th>
+    <th sortable-v3="grade">Jegy</th>
+    <th sortable-v3="created">Felvéve</th>
+  </ng-template>
+
+  <ng-template #row let-enrollment>
+    <td>
+      <code class="badge text-bg-dark">{{ enrollment.student.neptun }}</code>
+      {{ enrollment.student.name }}
+    </td>
+    <td>
+      <code class="badge text-bg-secondary">{{ enrollment.subject.code }}</code>
+      {{ enrollment.subject.name }}
+    </td>
+    <td>{{ enrollment.grade }}</td>
+    <td>{{ enrollment.created | date: datetimeFormat }}</td>
+  </ng-template>
+</app-list-card>

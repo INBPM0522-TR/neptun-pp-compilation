@@ -1,0 +1,45 @@
+<nav class="navbar bg-dark navbar-expand-lg sticky-top" data-bs-theme="dark">
+  <div class="container">
+    <a class="navbar-brand" [routerLink]="'/'">
+      <img src="https://inf.unideb.hu/themes/custom/unideb_gamma/logo.svg" alt="Logo" width="30" height="24"
+           class="d-inline-block align-text-top">
+      Neptun++
+    </a>
+
+    <!-- kis kijelzőn a menü összecsukódik (Bootstrap JS: data-bs-toggle="collapse") -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <!-- routerLinkActive: az aktív útvonal linkje megkapja az 'active' osztályt -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link"
+             [routerLink]="'student'"
+             [routerLinkActive]="'active'">Hallgatók</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"
+             [routerLink]="'subject'"
+             [routerLinkActive]="'active'">Tárgyak</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"
+             [routerLink]="'enrollment'"
+             [routerLinkActive]="'active'">Tárgyfelvételek</a>
+        </li>
+      </ul>
+
+      <!-- a Swagger UI nem az Angular része: sima href, új lapon (a proxy viszi a backendhez) -->
+      <a class="btn btn-sm btn-outline-light" href="/swagger-ui/index.html" target="_blank"
+         title="API-dokumentáció (Swagger UI)">
+        <i class="bi bi-braces"></i>
+        <span class="d-none d-md-inline ms-1">API</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<router-outlet />

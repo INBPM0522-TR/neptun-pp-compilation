@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="card my-2">
+    <div class="card-header text-bg-primary d-flex flex-row align-items-center">
+      <span class="flex-grow-1">{{ title }}</span>
+      <!-- egyszeri tartalom (pl. Létrehozás gomb): ng-content -->
+      <ng-content select="[actions]"></ng-content>
+    </div>
+
+    <app-error-alert [error]="error"></app-error-alert>
+
+    <div class="card-body p-0 table-responsive">
+      <table class="table table-striped table-hover m-0">
+        <thead class="table-dark">
+        <tr>
+          <ng-container *ngTemplateOutlet="header ?? null"></ng-container>
+        </tr>
+        </thead>
+        <tbody>
+          @for (item of items; track $index) {
+            <tr>
+              <!-- soronként ismétlődő tartalom: ng-template + kontextus -->
+              <ng-container *ngTemplateOutlet="row ?? null; context: { $implicit: item }"></ng-container>
+            </tr>
+          } @empty {
+            <tr empty [colSpan]="columns">{{ entity }}</tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

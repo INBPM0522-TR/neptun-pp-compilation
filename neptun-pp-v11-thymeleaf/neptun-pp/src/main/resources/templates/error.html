@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Hiba')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar('')}"></nav>
+
+<div class="container">
+  <div class="card my-2">
+    <div class="card-header text-bg-danger" th:text="|${status} ${error}|">404 Not Found</div>
+    <div class="card-body">
+      <p th:text="${message}">Nincs ilyen hallgató.</p>
+      <a class="btn btn-outline-primary" th:href="@{/student}">
+        <i class="bi bi-arrow-left me-1"></i>Vissza a hallgatókhoz
+      </a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "menu": {
+    "students": "Students",
+    "subjects": "Subjects",
+    "enrollments": "Enrollments"
+  },
+  "common": {
+    "actions": "Actions",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "success": "Success!",
+    "empty": "There is no {{entity}} to display!"
+  },
+  "program": {
+    "CS_BSC": "Computer Science BSc",
+    "CSE_BSC": "Computer Science Engineering BSc",
+    "BI_BSC": "Business Informatics BSc"
+  },
+  "student": {
+    "title": "Students",
+    "entity": "student",
+    "createTitle": "New student",
+    "editTitle": "Edit {{name}}",
+    "neptun": "Neptun code",
+    "name": "Name",
+    "program": "Program",
+    "chooseProgram": "Choose a program",
+    "created": "Created",
+    "updated": "Updated"
+  }
+}

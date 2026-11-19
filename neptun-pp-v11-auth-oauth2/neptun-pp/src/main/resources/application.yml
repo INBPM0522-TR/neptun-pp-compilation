@@ -1,0 +1,29 @@
+server.port: 8083
+spring:
+  banner:
+    location: classpath:banner.txt
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    generate-ddl: true
+    show-sql: true
+  h2.console:
+    enabled: true
+    path: /db
+  # OAuth 2.0 bejelentkezés GitHubbal. A titkokat környezeti változókból olvassuk!
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            # a GitHub ide irányít vissza: a frontend címe, a dev szerver proxyja viszi a backendhez
+            redirect-uri: "${app.frontend-url}/login/oauth2/code/{registrationId}"
+
+# az Angular alkalmazás címe: sikeres bejelentkezés után ide megyünk vissza
+app:
+  frontend-url: http://localhost:4200

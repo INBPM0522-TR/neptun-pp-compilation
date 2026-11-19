@@ -1,0 +1,33 @@
+{
+  "menu": {
+    "students": "Hallgatók",
+    "subjects": "Tárgyak",
+    "enrollments": "Tárgyfelvételek"
+  },
+  "common": {
+    "actions": "Műveletek",
+    "create": "Létrehozás",
+    "edit": "Módosítás",
+    "delete": "Törlés",
+    "save": "Mentés",
+    "success": "Sikeres művelet!",
+    "empty": "Nincs megjeleníthető {{entity}}!"
+  },
+  "program": {
+    "CS_BSC": "Programtervező informatikus BSc",
+    "CSE_BSC": "Mérnökinformatikus BSc",
+    "BI_BSC": "Gazdaságinformatikus BSc"
+  },
+  "student": {
+    "title": "Hallgatók",
+    "entity": "hallgató",
+    "createTitle": "Új hallgató",
+    "editTitle": "{{name}} szerkesztése",
+    "neptun": "Neptun-kód",
+    "name": "Név",
+    "program": "Szak",
+    "chooseProgram": "Válassz szakot",
+    "created": "Létrehozva",
+    "updated": "Módosítva"
+  }
+}

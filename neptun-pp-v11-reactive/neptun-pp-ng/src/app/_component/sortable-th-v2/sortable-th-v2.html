@@ -1,0 +1,8 @@
+<div (click)="click()">
+  <ng-content></ng-content>
+  @if (orderBy() === value()) {
+    <i class="bi float-end"
+       [class.bi-sort-down-alt]="!desc()"
+       [class.bi-sort-down]="desc()"></i>
+  }
+</div>

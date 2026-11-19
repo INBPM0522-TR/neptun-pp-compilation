@@ -1,0 +1,73 @@
+<div class="container">
+  <div class="card my-2">
+    <div class="card-header text-bg-primary">
+      @if (student) {
+        {{ isNew ? 'Create Student' : `Edit ${student.name}` }}
+      } @else {
+        Student
+      }
+    </div>
+
+    <!-- 400-nál a mezőnkénti hibák is megjelennek, a labels szerinti címkékkel -->
+    <app-error-alert [error]="error" [labels]="labels"></app-error-alert>
+
+    <!-- a hallgató aszinkron töltődik be: amíg nincs meg, ne próbáljuk kirajzolni -->
+    @if (student) {
+      <div class="card-body">
+        @if (!isNew) {
+          <div class="form-floating my-2">
+            <input id="neptun" class="form-control"
+                   [(ngModel)]="student.neptun"
+                   disabled>
+            <label for="neptun">Neptun-code</label>
+          </div>
+        }
+
+        <div class="form-floating my-2">
+          <input id="name" class="form-control"
+                 [(ngModel)]="student.name">
+          <label for="name">Name</label>
+        </div>
+
+        <div class="form-floating my-2">
+          <select id="program" class="form-select"
+                  [(ngModel)]="student.program">
+            <option value="" disabled>Choose a program</option>
+            @for (program of programs.keys(); track $index) {
+              <option [value]="program">{{ program | program }}</option>
+            }
+          </select>
+          <label for="program">Program</label>
+        </div>
+
+        <button class="btn btn-outline-primary w-100"
+                [title]="isNew ? 'Create' : 'Update'"
+                (click)="save()">
+          <i class="bi" [class.bi-plus-lg]="isNew" [class.bi-floppy]="!isNew"></i>
+          <span class="d-none d-md-inline ms-1">{{ isNew ? 'Create' : 'Update' }}</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Tavalyi megoldás: rejtett gomb, ami a data-bs-* attribútumokkal nyitja a modalt.
+     A kódból a gomb .click()-jét hívjuk (lásd student-edit.ts). -->
+<button #openModal type="button" class="d-none"
+        data-bs-toggle="modal" data-bs-target="#savedModal"></button>
+
+<div class="modal fade" id="savedModal" tabindex="-1" aria-labelledby="savedModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="alert alert-success m-0">
+        <h1 class="modal-title fs-5" id="savedModalLabel">Sikeres mentés!</h1>
+        <p>A módosításokat elmentettük, tovább szerkesztheted a hallgatót.</p>
+        <button #closeModal type="button" class="btn btn-success btn-sm w-100" data-bs-dismiss="modal"
+                title="Bezárás">
+          <i class="bi bi-x-lg"></i>
+          <span class="d-none d-md-inline ms-1">Bezárás</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

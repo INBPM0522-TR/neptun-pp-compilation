@@ -1,0 +1,24 @@
+server.port: 8083
+spring:
+  banner:
+    location: classpath:banner.txt
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    generate-ddl: true
+    show-sql: true
+  h2.console:
+    enabled: true
+    path: /db
+
+# OpenAPI (/v3/api-docs) és Swagger UI (/swagger-ui/index.html)
+springdoc:
+  # csak a REST API kerüljön a leírásba (a H2 konzol és a hibaoldal ne)
+  paths-to-match: /api/**
+  swagger-ui:
+    operations-sorter: method
+    tags-sorter: alpha
+    try-it-out-enabled: true

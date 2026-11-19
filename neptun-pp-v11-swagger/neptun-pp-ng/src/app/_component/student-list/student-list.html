@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="card my-2">
+    <div class="card-header text-bg-primary d-flex flex-row align-items-center">
+      <span class="flex-grow-1">Hallgatók</span>
+      <!-- gombok: az ikon mindig látszik, a felirat csak md mérettől (d-none d-md-inline) -->
+      <a class="btn btn-sm btn-dark m-1" [routerLink]="'create'" title="Létrehozás">
+        <i class="bi bi-plus-lg"></i>
+        <span class="d-none d-md-inline ms-1">Létrehozás</span>
+      </a>
+    </div>
+    <div class="card-body p-0 table-responsive">
+      <table class="table table-striped table-hover m-0">
+        <thead class="table-dark">
+        <tr>
+          <!-- v1: egyirányú kötés, a szülő order függvényét kapja -->
+          <th sortable-v1 value="neptun" [orderBy]="orderBy" [desc]="desc" [order]="order">Neptun-kód</th>
+          <th sortable-v1 value="name" [orderBy]="orderBy" [desc]="desc" [order]="order">Név</th>
+          <!-- v2: kétirányú kötés -->
+          <th sortable-v2 value="program" [(orderBy)]="orderBy" [(desc)]="desc">Szak</th>
+          <th sortable-v2 value="created" [(orderBy)]="orderBy" [(desc)]="desc">Létrehozva</th>
+          <th sortable-v2 value="updated" [(orderBy)]="orderBy" [(desc)]="desc">Módosítva</th>
+          <th>Műveletek</th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (student of students | sort: orderBy : desc; track student.neptun) {
+            <tr [class.table-danger]="student.program === 'BI_BSC'">
+              <td><code class="badge text-bg-dark">{{ student.neptun }}</code></td>
+              <td>{{ student.name }}</td>
+              <td>{{ student.program | program }}</td>
+              <td>{{ student.created | date: datetimeFormat }}</td>
+              <td>{{ student.updated | date: datetimeFormat }}</td>
+              <td>
+                <button class="btn btn-sm btn-outline-danger m-1" title="Törlés"
+                        (click)="deleteOne(student)">
+                  <i class="bi bi-trash"></i>
+                  <span class="d-none d-md-inline ms-1">Törlés</span>
+                </button>
+                <a class="btn btn-sm btn-outline-primary m-1" title="Módosítás"
+                   [routerLink]="student.neptun">
+                  <i class="bi bi-pencil"></i>
+                  <span class="d-none d-md-inline ms-1">Módosítás</span>
+                </a>
+              </td>
+            </tr>
+          } @empty {
+            <!-- ha a tömb üres, ez a sor jelenik meg -->
+            <tr empty [colSpan]="6">hallgató</tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

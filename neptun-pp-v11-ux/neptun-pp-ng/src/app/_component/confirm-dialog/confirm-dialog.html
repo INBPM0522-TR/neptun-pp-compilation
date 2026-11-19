@@ -1,0 +1,21 @@
+<div class="modal-header text-bg-danger">
+  <h1 class="modal-title fs-5">Törlés</h1>
+  <button type="button" class="btn-close btn-close-white" aria-label="Bezárás"
+          (click)="activeModal.dismiss()"></button>
+</div>
+<div class="modal-body">
+  {{ message }}
+</div>
+<div class="modal-footer">
+  <!-- az ikon mindig látszik, a felirat csak md mérettől -->
+  <button type="button" class="btn btn-outline-secondary" title="Mégse"
+          (click)="activeModal.dismiss()">
+    <i class="bi bi-x-lg"></i>
+    <span class="d-none d-md-inline ms-1">Mégse</span>
+  </button>
+  <button type="button" class="btn btn-danger" title="Törlés"
+          (click)="activeModal.close()">
+    <i class="bi bi-trash"></i>
+    <span class="d-none d-md-inline ms-1">Törlés</span>
+  </button>
+</div>

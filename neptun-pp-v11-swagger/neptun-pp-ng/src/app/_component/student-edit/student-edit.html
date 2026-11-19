@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="card my-2">
+    <!-- a hallgató aszinkron töltődik be: amíg nincs meg, ne próbáljuk kirajzolni -->
+    @if (student) {
+      <div class="card-header text-bg-primary">
+        {{ isNew ? 'Create Student' : `Edit ${student.name}` }}
+      </div>
+      <div class="card-body">
+        @if (!isNew) {
+          <div class="form-floating my-2">
+            <input id="neptun" class="form-control"
+                   [(ngModel)]="student.neptun"
+                   disabled>
+            <label for="neptun">Neptun-code</label>
+          </div>
+        }
+
+        <div class="form-floating my-2">
+          <input id="name" class="form-control"
+                 [(ngModel)]="student.name">
+          <label for="name">Name</label>
+        </div>
+
+        <div class="form-floating my-2">
+          <select id="program" class="form-select"
+                  [(ngModel)]="student.program">
+            <option value="" disabled>Choose a program</option>
+            @for (program of programs.keys(); track $index) {
+              <option [value]="program">{{ program | program }}</option>
+            }
+          </select>
+        </div>
+
+        <button class="btn btn-outline-primary w-100"
+                [title]="isNew ? 'Create' : 'Update'"
+                (click)="save()">
+          <i class="bi" [class.bi-plus-lg]="isNew" [class.bi-floppy]="!isNew"></i>
+          <span class="d-none d-md-inline ms-1">{{ isNew ? 'Create' : 'Update' }}</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(${#strings.isEmpty(student.neptun)} ? 'Új hallgató' : ${student.name})}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar('student')}"></nav>
+
+<!-- új hallgató: üres Neptun-kód (az üres szöveg a Thymeleafben IGAZ értéknek számít!) -->
+<div class="container" th:with="isNew=${#strings.isEmpty(student.neptun)}">
+  <div class="card my-2">
+    <div class="card-header text-bg-primary"
+         th:text="${isNew} ? 'Új hallgató' : |${student.name} szerkesztése|">Új hallgató</div>
+
+    <div th:replace="~{fragments :: flash}"></div>
+
+    <!-- th:object: az űrlap háttérobjektuma, a *{...} ennek a mezőire hivatkozik -->
+    <form class="card-body" method="post" th:action="@{/student/save}" th:object="${student}">
+      <!-- üres → létrehozás, különben módosítás -->
+      <input type="hidden" th:field="*{neptun}">
+
+      <div class="form-floating my-2" th:unless="${isNew}">
+        <input id="neptunView" class="form-control" th:value="*{neptun}" disabled>
+        <label for="neptunView">Neptun-kód</label>
+      </div>
+
+      <div class="form-floating my-2">
+        <input class="form-control" th:field="*{name}" th:errorclass="is-invalid">
+        <label for="name">Név</label>
+        <div class="invalid-feedback" th:errors="*{name}">nem lehet üres</div>
+      </div>
+
+      <div class="form-floating my-2">
+        <select class="form-select" th:field="*{program}" th:errorclass="is-invalid">
+          <option value="">Válassz szakot</option>
+          <option th:each="program : ${programs}"
+                  th:value="${program}"
+                  th:text="#{'program.' + ${program}}">Programtervező informatikus BSc</option>
+        </select>
+        <label for="program">Szak</label>
+        <div class="invalid-feedback" th:errors="*{program}">nem lehet null</div>
+      </div>
+
+      <button type="submit" class="btn btn-outline-primary w-100"
+              th:title="${isNew} ? 'Létrehozás' : 'Mentés'">
+        <i class="bi" th:classappend="${isNew} ? 'bi-plus-lg' : 'bi-floppy'"></i>
+        <span class="d-none d-md-inline ms-1" th:text="${isNew} ? 'Létrehozás' : 'Mentés'">Mentés</span>
+      </button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

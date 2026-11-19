@@ -1,0 +1,24 @@
+<!-- v3: a [sortable-table] tárolja a rendezést, a th[sortable-v3] fejlécek DI-vel érik el -->
+<app-list-card sortable-table [(sort)]="sort"
+               title="Tárgyak"
+               entity="tárgy"
+               [items]="subjects | sort: sort?.orderBy : sort?.desc"
+               [error]="error"
+               [columns]="5">
+
+  <ng-template #header>
+    <th sortable-v3="code">Kód</th>
+    <th sortable-v3="name">Név</th>
+    <th sortable-v3="credits">Kredit</th>
+    <th sortable-v3="limit">Létszámkorlát</th>
+    <th sortable-v3="program">Szak</th>
+  </ng-template>
+
+  <ng-template #row let-subject>
+    <td><code class="badge text-bg-dark">{{ subject.code }}</code></td>
+    <td>{{ subject.name }}</td>
+    <td>{{ subject.credits }}</td>
+    <td>{{ subject.limit }}</td>
+    <td>{{ subject.program | program }}</td>
+  </ng-template>
+</app-list-card>

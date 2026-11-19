@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Hallgatók')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar('student')}"></nav>
+
+<div class="container">
+  <div class="card my-2">
+    <div class="card-header text-bg-primary d-flex flex-row align-items-center">
+      <span class="flex-grow-1">Hallgatók</span>
+      <!-- az ikon mindig látszik, a felirat csak md mérettől (d-none d-md-inline) -->
+      <a class="btn btn-sm btn-dark m-1" th:href="@{/student/create}" title="Létrehozás">
+        <i class="bi bi-plus-lg"></i>
+        <span class="d-none d-md-inline ms-1">Létrehozás</span>
+      </a>
+    </div>
+
+    <div th:replace="~{fragments :: flash}"></div>
+
+    <div class="card-body p-0 table-responsive">
+      <table class="table table-striped table-hover m-0">
+        <thead class="table-dark">
+        <tr>
+          <!-- rendezhető fejlécek: linkek, a rendezés az URL-ben van -->
+          <th th:replace="~{fragments :: sortable('neptun', 'Neptun-kód')}"></th>
+          <th th:replace="~{fragments :: sortable('name', 'Név')}"></th>
+          <th th:replace="~{fragments :: sortable('program', 'Szak')}"></th>
+          <th th:replace="~{fragments :: sortable('created', 'Létrehozva')}"></th>
+          <th th:replace="~{fragments :: sortable('updated', 'Módosítva')}"></th>
+          <th>Műveletek</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="student : ${students}"
+            th:classappend="${student.program.name() == 'BI_BSC'} ? 'table-danger'">
+          <td><code class="badge text-bg-dark" th:text="${student.neptun}">ABC123</code></td>
+          <td th:text="${student.name}">Minta Márton</td>
+          <td th:text="#{'program.' + ${student.program}}">Programtervező informatikus BSc</td>
+          <td th:text="${#temporals.format(student.created, 'yyyy-MM-dd HH:mm:ss')}">2026-01-01 12:00:00</td>
+          <td th:text="${#temporals.format(student.updated, 'yyyy-MM-dd HH:mm:ss')}">2026-01-01 12:00:00</td>
+          <td>
+            <!-- törlés: POST űrlap (GET-tel nem módosítunk adatot!) -->
+            <form class="d-inline" method="post"
+                  th:action="@{/student/{neptun}/delete(neptun=${student.neptun})}"
+                  th:data-name="${student.name}"
+                  onsubmit="return confirm('Biztosan törlöd ' + this.dataset.name + ' hallgatót?')">
+              <button type="submit" class="btn btn-sm btn-outline-danger m-1" title="Törlés">
+                <i class="bi bi-trash"></i>
+                <span class="d-none d-md-inline ms-1">Törlés</span>
+              </button>
+            </form>
+            <a class="btn btn-sm btn-outline-primary m-1" title="Módosítás"
+               th:href="@{/student/{neptun}(neptun=${student.neptun})}">
+              <i class="bi bi-pencil"></i>
+              <span class="d-none d-md-inline ms-1">Módosítás</span>
+            </a>
+          </td>
+        </tr>
+        <!-- üres lista: a th:if a th:block-on van, mert a th:replace "erősebb" a th:if-nél -->
+        <th:block th:if="${students.isEmpty()}">
+          <tr th:replace="~{fragments :: emptyRow(6, 'hallgató')}"></tr>
+        </th:block>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

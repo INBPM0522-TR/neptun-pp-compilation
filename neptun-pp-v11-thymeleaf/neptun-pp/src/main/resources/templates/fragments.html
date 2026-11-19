@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+
+<!-- <head>: <head th:replace="~{fragments :: head('Hallgatók')}"></head> -->
+<head th:fragment="head(title)">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="|${title} – Neptun++|">Neptun++</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+<!-- navbar: <nav th:replace="~{fragments :: navbar('student')}"></nav> -->
+<nav th:fragment="navbar(active)" class="navbar bg-dark navbar-expand-lg sticky-top" data-bs-theme="dark">
+  <div class="container">
+    <a class="navbar-brand" th:href="@{/}">
+      <img src="https://inf.unideb.hu/themes/custom/unideb_gamma/logo.svg" alt="Logo" width="30" height="24"
+           class="d-inline-block align-text-top">
+      Neptun++
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <!-- routerLinkActive helyett: az aktív menüpontot a sablon adja meg -->
+          <a class="nav-link" th:href="@{/student}"
+             th:classappend="${active == 'student'} ? 'active'">Hallgatók</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- rendezhető fejléc: <th th:replace="~{fragments :: sortable('name', 'Név')}"></th>
+     A rendezés állapota az URL-ben van: /student?orderBy=name&desc=false -->
+<th th:fragment="sortable(value, label)">
+  <a class="d-block text-reset text-decoration-none"
+     th:href="@{/student(orderBy=${value}, desc=${orderBy == value and !desc})}">
+    <span th:text="${label}">Név</span>
+    <i th:if="${orderBy == value}" class="bi float-end"
+       th:classappend="${desc} ? 'bi-sort-down' : 'bi-sort-down-alt'"></i>
+  </a>
+</th>
+
+<!-- "nincs adat" sor: <tr th:replace="~{fragments :: emptyRow(6, 'hallgató')}"></tr> -->
+<tr th:fragment="emptyRow(colSpan, entity)">
+  <th th:colspan="${colSpan}" class="table-warning">
+    <div class="d-flex flex-row justify-content-center align-items-center">
+      <i class="bi bi-emoji-smile-upside-down-fill me-2" style="font-size: 1.5em"></i>
+      Nincs megjeleníthető [[${entity}]]!
+    </div>
+  </th>
+</tr>
+
+<!-- üzenetsáv a flash attribútumokhoz (success / error): <div th:replace="~{fragments :: flash}"></div> -->
+<div th:fragment="flash" th:remove="tag">
+  <div th:if="${success}" class="alert alert-success alert-dismissible m-2">
+    <i class="bi bi-check-circle-fill me-1"></i><span th:text="${success}">Siker</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Bezárás"></button>
+  </div>
+  <div th:if="${error}" class="alert alert-danger alert-dismissible m-2">
+    <i class="bi bi-exclamation-triangle-fill me-1"></i><span th:text="${error}">Hiba</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Bezárás"></button>
+  </div>
+</div>
+
+</body>
+</html>

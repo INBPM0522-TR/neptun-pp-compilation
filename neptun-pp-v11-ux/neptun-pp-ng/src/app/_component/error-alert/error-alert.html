@@ -1,0 +1,17 @@
+@if (error) {
+  <div class="alert alert-danger m-2">
+    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+    {{ message }}
+
+    @if (fieldErrors) {
+      <ul class="mb-0">
+        @for (fieldError of fieldErrors | keyvalue; track fieldError.key) {
+          <li>
+            <b>{{ labels[fieldError.key] ?? fieldError.key }}:</b>
+            {{ fieldError.value }}
+          </li>
+        }
+      </ul>
+    }
+  </div>
+}

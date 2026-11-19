@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="card my-2">
+    <!-- a hallgató aszinkron töltődik be: amíg nincs meg, ne próbáljuk kirajzolni -->
+    @if (student) {
+      <div class="card-header text-bg-primary">
+        {{ isNew ? ('student.createTitle' | translate) : ('student.editTitle' | translate: { name: student.name }) }}
+      </div>
+      <div class="card-body">
+        @if (!isNew) {
+          <div class="form-floating my-2">
+            <input id="neptun" class="form-control"
+                   [(ngModel)]="student.neptun"
+                   disabled>
+            <label for="neptun">{{ 'student.neptun' | translate }}</label>
+          </div>
+        }
+
+        <div class="form-floating my-2">
+          <input id="name" class="form-control"
+                 [(ngModel)]="student.name">
+          <label for="name">{{ 'student.name' | translate }}</label>
+        </div>
+
+        <div class="form-floating my-2">
+          <select id="program" class="form-select"
+                  [(ngModel)]="student.program">
+            <option value="" disabled>{{ 'student.chooseProgram' | translate }}</option>
+            @for (program of programs.keys(); track $index) {
+              <option [value]="program">{{ program | program }}</option>
+            }
+          </select>
+          <label for="program">{{ 'student.program' | translate }}</label>
+        </div>
+
+        <button class="btn btn-outline-primary w-100"
+                [title]="(isNew ? 'common.create' : 'common.save') | translate"
+                (click)="save()">
+          <i class="bi" [class.bi-plus-lg]="isNew" [class.bi-floppy]="!isNew"></i>
+          <span class="d-none d-md-inline ms-1">{{ (isNew ? 'common.create' : 'common.save') | translate }}</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,56 @@
+# A projekt gyökere: neptun-pp (Spring Boot / Maven) + neptun-pp-ng (Angular).
+# Az alprojektek saját .gitignore-ja kezeli a részleteket, ez a közös/gyökérszintű rész.
+
+### Build kimenetek (biztonsági háló, ha az alprojekt .gitignore-ja hiányozna) ###
+target/
+!.mvn/wrapper/maven-wrapper.jar
+node_modules/
+dist/
+out-tsc/
+.angular/
+coverage/
+
+### IntelliJ IDEA (a gyökér is megnyitható projektként) ###
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+### Eclipse / STS ###
+.metadata/
+.project
+.classpath
+.settings/
+.factorypath
+.apt_generated
+.sts4-cache/
+.springBeans
+
+### VS Code ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/
+
+### Naplók, ideiglenes fájlok ###
+*.log
+*.tmp
+*.swp
+*~
+
+### Helyi környezeti beállítások, titkok ###
+.env
+.env.*
+!.env.example
+application-local.properties
+application-local.yml
+
+### Operációs rendszer ###
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
